@@ -19,7 +19,7 @@ import java.net.Socket;
 public class MainActivity extends AppCompatActivity {
     String serverIP = "10.0.0.28";
     PrintStream p;
-    
+    //hello ben
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
