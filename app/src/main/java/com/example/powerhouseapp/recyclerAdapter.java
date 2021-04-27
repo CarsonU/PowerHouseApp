@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyViewHolder> {
 
     private ArrayList<outlet> outletList;
-
+    //comment
     public recyclerAdapter(ArrayList<outlet> outletList){
         this.outletList = outletList;
     }
