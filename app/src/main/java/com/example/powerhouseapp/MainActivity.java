@@ -2,11 +2,16 @@ package com.example.powerhouseapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.content.AsyncTaskLoader;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -15,10 +20,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     String serverIP = "10.0.0.28";
     PrintStream p;
+    private ArrayList<outlet> outletList;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
         //Connect client to server
         new connect().execute();
+
+        recyclerView = findViewById(R.id.outlets);
+        outletList = new ArrayList<>();
+
+        setOutletInfo();
+
+        setRecyclerAdapter();
 
         //Floating action button to show new outlet pop up window
         FloatingActionButton newOutlet = (FloatingActionButton) findViewById(R.id.newOutlet);
@@ -37,6 +52,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(MainActivity.this, NewOutlet.class), 1);
             }
         });
+
+    }
+
+    private void setRecyclerAdapter() {
+        recyclerAdapter adapter = new recyclerAdapter(outletList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void setOutletInfo() {
+        outletList.add(new outlet("Bedroom Lamp"));
+        outletList.add(new outlet("Living Room Lamp"));
+        outletList.add(new outlet("T.V."));
+        outletList.add(new outlet("Air Conditioner"));
     }
 
     //Gets outlet information from popup window
@@ -71,6 +103,15 @@ public class MainActivity extends AppCompatActivity {
             String outletName = params[0][0];
             String outletIP = params[0][1];
             String command = "outlets new " + outletName + " " + outletIP;
+            p.println(command);
+            return null;
+        }
+    }
+
+    class outletOn extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String command = "outlets on lamp";
             p.println(command);
             return null;
         }
