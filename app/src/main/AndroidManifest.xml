@@ -21,6 +21,7 @@
         <activity android:name=".NewOutlet"></activity>
         <activity android:name=".OutletsPage"></activity>
         <activity android:name=".OutletUsage"></activity>
+        <activity android:name=".Zones"></activity>
     </application>
 
 </manifest>

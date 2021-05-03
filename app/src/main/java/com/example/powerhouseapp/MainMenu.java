@@ -38,6 +38,15 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(intent);
             }
             });
+
+        Button goToZonePage = (Button) findViewById(R.id.btnZonePage);
+        goToZonePage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainMenu.this, Zones.class);
+                startActivity(intent);
+            }
+        });
     }
 
     //Printstream getter

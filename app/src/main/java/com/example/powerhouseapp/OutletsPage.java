@@ -115,18 +115,28 @@ public class OutletsPage extends AppCompatActivity {
         }
     }
 
-    public static class outletUsageToday extends AsyncTask<Outlet, Void, String> {
+    public static class outletUsage extends AsyncTask<Outlet, Void, String> {
         @Override
         protected String doInBackground(Outlet... params) {
-            Log.v("Task","Button usage today task called for " + params[0].getName());
-            String command = "usage today " + params[0].getName();
-            p.println(command);
-            try {
-                return reader.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
+//            ArrayList<String> result = new Arraylist<String>();
+//            //String[] result = new String[2];
+//            Log.v("Task","Button usage today task called for " + params[0].getName());
+//            try {
+//                String command = "usage today " + params[0].getName();
+//                p.println(command);
+//                result[0] = reader.readLine();
+//                command = "usage avg " + params[0].getName();
+//                p.println(command);
+//                result[1] = reader.readLine();
+//                command = "usage total " + params[0].getName();
+//                p.println(command);
+//                result[2] = reader.readLine();
+//                return result;
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+            return null;
         }
 
         @Override

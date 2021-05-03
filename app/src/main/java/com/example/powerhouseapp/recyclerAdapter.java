@@ -38,7 +38,7 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
                 Intent intent = new Intent(context, OutletUsage.class);
                 String todayusage = null;
                 try {
-                    todayusage = new OutletsPage.outletUsageToday().execute(outletList.get(position)).get();
+                    todayusage = new OutletsPage.outletUsage().execute(outletList.get(position)).get();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
