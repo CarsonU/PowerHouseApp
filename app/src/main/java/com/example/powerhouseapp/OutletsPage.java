@@ -14,11 +14,14 @@ import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class OutletsPage extends AppCompatActivity {
     static PrintStream p;
+    static BufferedReader reader;
     private ArrayList<Outlet> outletList;
     private RecyclerView recyclerView;
 
@@ -29,6 +32,8 @@ public class OutletsPage extends AppCompatActivity {
 
         //Get printstream
         p = MainMenu.getP();
+        //Get reader
+        reader = MainMenu.getReader();
 
         recyclerView = findViewById(R.id.outlets);
         outletList = new ArrayList<>();
@@ -79,6 +84,11 @@ public class OutletsPage extends AppCompatActivity {
             String outletIP = params[0].getIp();
             String command = "outlets new " + outletName + " " + outletIP;
             p.println(command);
+            try {
+                reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -105,13 +115,23 @@ public class OutletsPage extends AppCompatActivity {
         }
     }
 
-    public static class outletUsageToday extends AsyncTask<Outlet,Void,Void>{
+    public static class outletUsageToday extends AsyncTask<Outlet, Void, String> {
         @Override
-        protected Void doInBackground(Outlet... params) {
+        protected String doInBackground(Outlet... params) {
             Log.v("Task","Button usage today task called for " + params[0].getName());
             String command = "usage today " + params[0].getName();
             p.println(command);
-            return null;
+            try {
+                return reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
         }
     }
 

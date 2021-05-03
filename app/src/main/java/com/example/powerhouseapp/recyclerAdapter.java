@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyViewHolder> {
 
@@ -35,6 +36,15 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
             itemView.setOnClickListener((v) -> {
                 Log.v("View","Attempt to open usage");
                 Intent intent = new Intent(context, OutletUsage.class);
+                String todayusage = null;
+                try {
+                    todayusage = new OutletsPage.outletUsageToday().execute(outletList.get(position)).get();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                intent.putExtra("todayUsage",todayusage);
                 context.startActivity(intent);
             });
 

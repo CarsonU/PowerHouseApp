@@ -20,6 +20,7 @@ public class MainMenu extends AppCompatActivity {
     String serverIP = "10.0.0.28";
     //Used for sending commands to the server
     static PrintStream p;
+    static BufferedReader reader;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +44,10 @@ public class MainMenu extends AppCompatActivity {
     public static PrintStream getP() {
         return p;
     }
+    //Reader getter
+    public static BufferedReader getReader() {
+        return reader;
+    }
 
     //Connects client to server
     class connect extends AsyncTask<Void,Void,Void> {
@@ -51,7 +56,7 @@ public class MainMenu extends AppCompatActivity {
             try {
                 Socket s  = new Socket(serverIP, 4999);
                 InputStreamReader sc1  = new InputStreamReader(s.getInputStream());
-                BufferedReader read = new BufferedReader(sc1);
+                reader = new BufferedReader(sc1);
                 p = new PrintStream(s.getOutputStream());
             } catch (IOException e) {
                 e.printStackTrace();
