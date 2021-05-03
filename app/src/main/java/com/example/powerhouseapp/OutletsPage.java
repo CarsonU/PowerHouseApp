@@ -14,17 +14,13 @@ import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class OutletsPage extends AppCompatActivity {
     String serverIP;
     static PrintStream p;
-    private ArrayList<outlet> outletList;
+    private ArrayList<Outlet> outletList;
     private RecyclerView recyclerView;
 
     @Override
@@ -50,6 +46,7 @@ public class OutletsPage extends AppCompatActivity {
 
     }
 
+    //Update recyclerview
     private void setRecyclerAdapter() {
         recyclerAdapter adapter = new recyclerAdapter(outletList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -64,55 +61,55 @@ public class OutletsPage extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String[] info = data.getStringArrayExtra("info");
-        new addOutlet().execute(info);
-        outletList.add(new outlet(info[0],info[1]));
+        //Add outlet to client list
+        Outlet outlet = (Outlet) data.getSerializableExtra("outlet");
+        outletList.add(outlet);
+        //Add outlet server side
+        new addOutlet().execute(outlet);
+        //Update recyclerview
         setRecyclerAdapter();
     }
 
 
-
-
-    //Receives string array containing outlet name and ip and sends command to create the outlet
-    class addOutlet extends AsyncTask<String[], Void, Void> {
+    //Receives outlet and sends it to the server to be created
+    class addOutlet extends AsyncTask<Outlet, Void, Void> {
         @Override
-        protected Void doInBackground(String[]... params) {
-            String outletName = params[0][0];
-            System.out.println(outletName);
-            String outletIP = params[0][1];
-            System.out.println(outletIP);
+        protected Void doInBackground(Outlet... params) {
+            String outletName = params[0].getName();
+            String outletIP = params[0].getIp();
             String command = "outlets new " + outletName + " " + outletIP;
             p.println(command);
             return null;
         }
     }
 
-    public static class outletOn extends AsyncTask<String,Void,Void>{
+    //Receives outlet and turns it on
+    public static class outletOn extends AsyncTask<Outlet,Void,Void>{
         @Override
-        protected Void doInBackground(String... params) {
-            Log.v("Task","Button on task called for " + params[0]);
-            String command = "outlets on " + params[0];
+        protected Void doInBackground(Outlet... params) {
+            Log.v("Task","Button on task called for " + params[0].getName());
+            String command = "outlets on " + params[0].getName();
             p.println(command);
             return null;
         }
     }
 
-    public static class outletOff extends AsyncTask<String,Void,Void>{
+    //Receives outlet and turns it off
+    public static class outletOff extends AsyncTask<Outlet,Void,Void>{
         @Override
-        protected Void doInBackground(String... params) {
-            Log.v("Task","Button off task called for " + params[0]);
-            String command = "outlets off " + params[0];
+        protected Void doInBackground(Outlet... params) {
+            Log.v("Task","Button off task called for " + params[0].getName());
+            String command = "outlets off " + params[0].getName();
             p.println(command);
             return null;
         }
     }
 
-    //Receives outlet name and toggles the outlet
-    class toggle extends AsyncTask<String,Void,Void>{
+    //Receives outlet and toggles it
+    class toggle extends AsyncTask<Outlet,Void,Void>{
         @Override
-        protected Void doInBackground(String... params) {
-            String outletname = params[0];
-            String command = "outlets toggle " + outletname;
+        protected Void doInBackground(Outlet... params) {
+            String command = "outlets toggle " + params[0].getName();
             p.println(command);
             return null;
         }

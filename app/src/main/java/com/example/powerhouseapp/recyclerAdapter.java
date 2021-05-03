@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyViewHolder> {
 
-    private ArrayList<outlet> outletList;
+    private ArrayList<Outlet> outletList;
 
-    public recyclerAdapter(ArrayList<outlet> outletList){
+    public recyclerAdapter(ArrayList<Outlet> outletList){
         this.outletList = outletList;
     }
 
@@ -28,19 +28,21 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
             super(view);
             outletTxt = view.findViewById(R.id.textOutlet);
 
+            //Turn the outlet on
             itemView.findViewById(R.id.btnOn).setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
                     Log.v("Button","Button On Clicked for " + outletList.get(position).getName());
-                    new OutletsPage.outletOn().execute(outletList.get(position).getName());
+                    new OutletsPage.outletOn().execute(outletList.get(position));
                 }
             });
 
+            //Turn the outlet off
             itemView.findViewById(R.id.btnOff).setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
                     Log.v("Button","Button Off Clicked for " + outletList.get(position).getName());
-                   new OutletsPage.outletOff().execute(outletList.get(position).getName());
+                   new OutletsPage.outletOff().execute(outletList.get(position));
                 }
             });
         }
@@ -55,7 +57,7 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull recyclerAdapter.MyViewHolder holder, int position) {
-        outlet outlet = outletList.get(position);
+        Outlet outlet = outletList.get(position);
         holder.outletTxt.setText(outlet.getName());
         holder.name = outlet.getName();
         holder.position = position;

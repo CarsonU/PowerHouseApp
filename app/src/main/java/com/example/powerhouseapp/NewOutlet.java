@@ -10,6 +10,8 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
+
 public class NewOutlet extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,9 +32,9 @@ public class NewOutlet extends Activity {
         createOutlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] data = {editName.getText().toString(), editIP.getText().toString()};
+                Outlet outlet = new Outlet(editName.getText().toString(),editIP.getText().toString());
                 Intent intent = new Intent();
-                intent.putExtra("info",data);
+                intent.putExtra("outlet", (Serializable) outlet);
                 setResult(100, intent);
                 finish();
             }

@@ -1,12 +1,13 @@
 package com.example.powerhouseapp;
 
-public class outlet {
+import java.io.Serializable;
 
-    //This class needs to be fully fleshed out
+public class Outlet implements Serializable {
+
     private String name;
     private String ip;
 
-    public outlet(String name, String ip) {
+    public Outlet(String name, String ip) {
         this.name = name;
         this.ip = ip;
     }

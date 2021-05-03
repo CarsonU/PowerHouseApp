@@ -18,12 +18,8 @@ import java.net.Socket;
 
 public class MainMenu extends AppCompatActivity {
     String serverIP = "10.0.0.28";
+    //Used for sending commands to the server
     static PrintStream p;
-
-
-    public static PrintStream getP() {
-        return p;
-    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,14 +28,20 @@ public class MainMenu extends AppCompatActivity {
         //Connect client to server
         new connect().execute();
 
-        Button gotooutletpage = (Button) findViewById(R.id.btnOutletspage);
-        gotooutletpage.setOnClickListener(new View.OnClickListener() {
+        Button gotoOutletPage = (Button) findViewById(R.id.btnOutletspage);
+        gotoOutletPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Open outlet page
                 Intent intent = new Intent(MainMenu.this, OutletsPage.class);
                 startActivity(intent);
             }
             });
+    }
+
+    //Printstream getter
+    public static PrintStream getP() {
+        return p;
     }
 
     //Connects client to server
