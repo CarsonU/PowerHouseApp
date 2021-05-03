@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".NewOutlet"></activity>
         <activity android:name=".OutletsPage"></activity>
+        <activity android:name=".OutletUsage"></activity>
     </application>
 
 </manifest>

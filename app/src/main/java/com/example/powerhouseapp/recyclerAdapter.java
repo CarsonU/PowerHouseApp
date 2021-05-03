@@ -1,5 +1,7 @@
 package com.example.powerhouseapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,16 +25,23 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
         public String name;
         public int position;
         private TextView outletTxt;
+        private final Context context;
 
         public MyViewHolder(final View view){
             super(view);
             outletTxt = view.findViewById(R.id.textOutlet);
+            context = view.getContext();
+
+            itemView.setOnClickListener((v) -> {
+                Log.v("View","Attempt to open usage");
+                Intent intent = new Intent(context, OutletUsage.class);
+                context.startActivity(intent);
+            });
 
             //Turn the outlet on
             itemView.findViewById(R.id.btnOn).setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    Log.v("Button","Button On Clicked for " + outletList.get(position).getName());
                     new OutletsPage.outletOn().execute(outletList.get(position));
                 }
             });
@@ -41,7 +50,6 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
             itemView.findViewById(R.id.btnOff).setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    Log.v("Button","Button Off Clicked for " + outletList.get(position).getName());
                    new OutletsPage.outletOff().execute(outletList.get(position));
                 }
             });

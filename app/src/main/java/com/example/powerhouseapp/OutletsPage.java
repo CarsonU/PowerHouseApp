@@ -18,7 +18,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class OutletsPage extends AppCompatActivity {
-    String serverIP;
     static PrintStream p;
     private ArrayList<Outlet> outletList;
     private RecyclerView recyclerView;
@@ -28,6 +27,7 @@ public class OutletsPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.outlet_page);
 
+        //Get printstream
         p = MainMenu.getP();
 
         recyclerView = findViewById(R.id.outlets);
@@ -100,6 +100,16 @@ public class OutletsPage extends AppCompatActivity {
         protected Void doInBackground(Outlet... params) {
             Log.v("Task","Button off task called for " + params[0].getName());
             String command = "outlets off " + params[0].getName();
+            p.println(command);
+            return null;
+        }
+    }
+
+    public static class outletUsageToday extends AsyncTask<Outlet,Void,Void>{
+        @Override
+        protected Void doInBackground(Outlet... params) {
+            Log.v("Task","Button usage today task called for " + params[0].getName());
+            String command = "usage today " + params[0].getName();
             p.println(command);
             return null;
         }
