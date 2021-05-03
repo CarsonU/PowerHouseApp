@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,8 +22,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class OutletsPage extends AppCompatActivity {
-    String serverIP = "10.0.0.28";
-    PrintStream p;
+    String serverIP;
+    static PrintStream p;
     private ArrayList<outlet> outletList;
     private RecyclerView recyclerView;
 
@@ -31,15 +32,11 @@ public class OutletsPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.outlet_page);
 
-        //Connect client to server
-        new connect().execute();
+        p = MainMenu.getP();
 
         recyclerView = findViewById(R.id.outlets);
         outletList = new ArrayList<>();
 
-        setOutletInfo();
-
-        setRecyclerAdapter();
 
         //Floating action button to show new outlet pop up window
         FloatingActionButton newOutlet = (FloatingActionButton) findViewById(R.id.newOutlet);
@@ -62,12 +59,6 @@ public class OutletsPage extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void setOutletInfo() {
-        outletList.add(new outlet("Bedroom Lamp"));
-        outletList.add(new outlet("Living Room Lamp"));
-        outletList.add(new outlet("T.V."));
-        outletList.add(new outlet("Air Conditioner"));
-    }
 
     //Gets outlet information from popup window
     @Override
@@ -75,41 +66,42 @@ public class OutletsPage extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         String[] info = data.getStringArrayExtra("info");
         new addOutlet().execute(info);
-        new toggle().execute(info[0]);
+        outletList.add(new outlet(info[0],info[1]));
+        setRecyclerAdapter();
     }
 
-    //Connects client to server
-    class connect extends AsyncTask<Void,Void,Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                Socket s  = new Socket(serverIP, 4999);
-                InputStreamReader sc1  = new InputStreamReader(s.getInputStream());
-                BufferedReader read = new BufferedReader(sc1);
-                p = new PrintStream(s.getOutputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
+
+
 
     //Receives string array containing outlet name and ip and sends command to create the outlet
     class addOutlet extends AsyncTask<String[], Void, Void> {
         @Override
         protected Void doInBackground(String[]... params) {
             String outletName = params[0][0];
+            System.out.println(outletName);
             String outletIP = params[0][1];
+            System.out.println(outletIP);
             String command = "outlets new " + outletName + " " + outletIP;
             p.println(command);
             return null;
         }
     }
 
-    class outletOn extends AsyncTask<Void,Void,Void>{
+    public static class outletOn extends AsyncTask<String,Void,Void>{
         @Override
-        protected Void doInBackground(Void... voids) {
-            String command = "outlets on lamp";
+        protected Void doInBackground(String... params) {
+            Log.v("Task","Button on task called for " + params[0]);
+            String command = "outlets on " + params[0];
+            p.println(command);
+            return null;
+        }
+    }
+
+    public static class outletOff extends AsyncTask<String,Void,Void>{
+        @Override
+        protected Void doInBackground(String... params) {
+            Log.v("Task","Button off task called for " + params[0]);
+            String command = "outlets off " + params[0];
             p.println(command);
             return null;
         }
