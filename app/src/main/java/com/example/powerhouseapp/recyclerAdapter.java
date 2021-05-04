@@ -36,15 +36,15 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
             itemView.setOnClickListener((v) -> {
                 Log.v("View","Attempt to open usage");
                 Intent intent = new Intent(context, OutletUsage.class);
-                String todayusage = null;
+                ArrayList<String> usage = new ArrayList<>();
                 try {
-                    todayusage = new OutletsPage.outletUsage().execute(outletList.get(position)).get();
+                    usage = new OutletsPage.outletUsage().execute(outletList.get(position)).get();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                intent.putExtra("todayUsage",todayusage);
+                intent.putExtra("usage",usage);
                 context.startActivity(intent);
             });
 

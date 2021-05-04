@@ -14,10 +14,15 @@ import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class OutletsPage extends AppCompatActivity {
     static PrintStream p;
@@ -30,6 +35,8 @@ public class OutletsPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.outlet_page);
 
+        Log.v("Outlets Page","onCreate called");
+
         //Get printstream
         p = MainMenu.getP();
         //Get reader
@@ -37,7 +44,8 @@ public class OutletsPage extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.outlets);
         outletList = new ArrayList<>();
-
+        new updateOutlets().execute();
+        setRecyclerAdapter();
 
         //Floating action button to show new outlet pop up window
         FloatingActionButton newOutlet = (FloatingActionButton) findViewById(R.id.newOutlet);
@@ -93,6 +101,30 @@ public class OutletsPage extends AppCompatActivity {
         }
     }
 
+    //Connects client to server
+    class updateOutlets extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String command = "outlets list";
+            p.println(command);
+            try {
+                String input = reader.readLine();
+                JSONParser parser = new JSONParser();
+                JSONObject json = (JSONObject) parser.parse(input);
+
+                for(Iterator iterator = json.keySet().iterator();iterator.hasNext();){
+                    String outletName = (String) iterator.next();
+                    String outletIP = json.get(outletName).toString();
+                    Outlet outlet = new Outlet(outletName, outletIP);
+                    outletList.add(outlet);
+                }
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     //Receives outlet and turns it on
     public static class outletOn extends AsyncTask<Outlet,Void,Void>{
         @Override
@@ -115,32 +147,30 @@ public class OutletsPage extends AppCompatActivity {
         }
     }
 
-    public static class outletUsage extends AsyncTask<Outlet, Void, String> {
+    public static class outletUsage extends AsyncTask<Outlet, Void, ArrayList<String>> {
         @Override
-        protected String doInBackground(Outlet... params) {
-//            ArrayList<String> result = new Arraylist<String>();
-//            //String[] result = new String[2];
-//            Log.v("Task","Button usage today task called for " + params[0].getName());
-//            try {
-//                String command = "usage today " + params[0].getName();
-//                p.println(command);
-//                result[0] = reader.readLine();
-//                command = "usage avg " + params[0].getName();
-//                p.println(command);
-//                result[1] = reader.readLine();
-//                command = "usage total " + params[0].getName();
-//                p.println(command);
-//                result[2] = reader.readLine();
-//                return result;
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                return null;
-//            }
-            return null;
+        protected ArrayList<String> doInBackground(Outlet... params) {
+            ArrayList<String> result = new ArrayList<>();
+            Log.v("Task","Button usage today task called for " + params[0].getName());
+            try {
+                String command = "usage today " + params[0].getName();
+                p.println(command);
+                result.add(reader.readLine());
+                command = "usage avg " + params[0].getName();
+                p.println(command);
+                result.add(reader.readLine());
+                command = "usage total " + params[0].getName();
+                p.println(command);
+                result.add(reader.readLine());
+                return result;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(ArrayList<String> s) {
             super.onPostExecute(s);
         }
     }
