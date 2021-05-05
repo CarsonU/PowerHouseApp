@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -17,7 +18,11 @@ import java.io.Serializable;
 import java.net.Socket;
 
 public class MainMenu extends AppCompatActivity {
-    String serverIP = "10.0.0.28";
+    String carsonPiIP = "10.0.0.28";
+    String benPiIP = "";
+    String tylerPiIP = "";
+    String serverIP = carsonPiIP;
+
     //Used for sending commands to the server
     static PrintStream p;
     static BufferedReader reader;
@@ -25,10 +30,12 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_main);
+        Log.v("MainMenu.java","onCreate called");
 
         //Connect client to server
         new connect().execute();
 
+        //Button that opens outlet page
         Button gotoOutletPage = (Button) findViewById(R.id.btnOutletspage);
         gotoOutletPage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,23 +46,16 @@ public class MainMenu extends AppCompatActivity {
             }
             });
 
+        //Button that opens zone page
         Button goToZonePage = (Button) findViewById(R.id.btnZonePage);
         goToZonePage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                //Open zone page
                 Intent intent = new Intent(MainMenu.this, Zones.class);
                 startActivity(intent);
             }
         });
-    }
-
-    //Printstream getter
-    public static PrintStream getP() {
-        return p;
-    }
-    //Reader getter
-    public static BufferedReader getReader() {
-        return reader;
     }
 
     //Connects client to server
@@ -72,6 +72,15 @@ public class MainMenu extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    //Printstream getter
+    public static PrintStream getP() {
+        return p;
+    }
+    //Reader getter
+    public static BufferedReader getReader() {
+        return reader;
     }
 
 }

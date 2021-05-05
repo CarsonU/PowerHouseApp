@@ -37,6 +37,8 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
                 Log.v("View","Attempt to open usage");
                 Intent intent = new Intent(context, OutletUsage.class);
                 ArrayList<String> usage = new ArrayList<>();
+
+                //Calls text to get data usage for the outlet
                 try {
                     usage = new OutletsPage.outletUsage().execute(outletList.get(position)).get();
                 } catch (ExecutionException e) {
@@ -44,11 +46,13 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                //Sends usage data to the usage page and then opens it
                 intent.putExtra("usage",usage);
                 context.startActivity(intent);
             });
 
-            //Turn the outlet on
+            //Turn the outlet on button
             itemView.findViewById(R.id.btnOn).setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
@@ -56,7 +60,7 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
                 }
             });
 
-            //Turn the outlet off
+            //Turn the outlet off button
             itemView.findViewById(R.id.btnOff).setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
@@ -75,6 +79,7 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull recyclerAdapter.MyViewHolder holder, int position) {
+        //Store and set outlet name
         Outlet outlet = outletList.get(position);
         holder.outletTxt.setText(outlet.getName());
         holder.name = outlet.getName();
