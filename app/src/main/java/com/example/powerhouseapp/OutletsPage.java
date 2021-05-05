@@ -1,6 +1,7 @@
 package com.example.powerhouseapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -29,11 +31,13 @@ public class OutletsPage extends AppCompatActivity {
     static BufferedReader reader;
     private ArrayList<Outlet> outletList;
     private RecyclerView recyclerView;
+    static ConstraintLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.outlet_page);
+        mainLayout = findViewById(R.id.mainLayout);
         Log.v("OutletsPage.java","onCreate called");
 
         //Get printstream
@@ -63,7 +67,7 @@ public class OutletsPage extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //Result code for newoutlet page = 1
-        if (resultCode == 1){
+        if (requestCode == 1){
             //Add outlet to client list
             Outlet outlet = (Outlet) data.getSerializableExtra("outlet");
             //Add outlet server side and update recyclerview
@@ -83,6 +87,11 @@ public class OutletsPage extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    //Shows a popup snackbar for messages from the server
+    private static void showSnackbar(String message){
+        Snackbar.make(mainLayout, message, Snackbar.LENGTH_LONG).show();
+    }
+
 
     //Creates and outlet server side, and then updates the client
     class addOutlet extends AsyncTask<Outlet, Void, Void> {
@@ -90,11 +99,11 @@ public class OutletsPage extends AppCompatActivity {
         protected Void doInBackground(Outlet... params) {
             String outletName = params[0].getName();
             String outletIP = params[0].getIp();
+            Log.v("Outlet",outletName + " " + outletIP);
             String command = "outlets new " + outletName + " " + outletIP;
             p.println(command);
-
             try {
-                reader.readLine();
+              showSnackbar(reader.readLine());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -157,7 +166,7 @@ public class OutletsPage extends AppCompatActivity {
             p.println(command);
 
             try {
-                reader.readLine();
+                showSnackbar(reader.readLine());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -174,7 +183,7 @@ public class OutletsPage extends AppCompatActivity {
             String command = "outlets off " + params[0].getName();
             p.println(command);
             try {
-                reader.readLine();
+                showSnackbar(reader.readLine());
             } catch (IOException e) {
                 e.printStackTrace();
             }
