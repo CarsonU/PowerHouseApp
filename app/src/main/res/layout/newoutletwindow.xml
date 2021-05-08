@@ -14,7 +14,7 @@
         android:text="Outlet Name"
         android:textColor="#000000"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextOutletName"
+        app:layout_constraintBottom_toTopOf="@+id/editTextScheduleName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextOutletName"
+        android:id="@+id/editTextScheduleName"
         android:layout_width="243dp"
         android:layout_height="40dp"
         android:layout_marginBottom="28dp"
@@ -48,12 +48,12 @@
         android:layout_marginBottom="96dp"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/btnCreateOutlet"
+        app:layout_constraintBottom_toTopOf="@+id/btnCreateSchedule"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btnCreateOutlet"
+        android:id="@+id/btnCreateSchedule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="96dp"

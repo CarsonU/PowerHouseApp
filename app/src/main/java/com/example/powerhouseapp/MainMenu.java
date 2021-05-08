@@ -37,7 +37,6 @@ public class MainMenu extends AppCompatActivity {
         //Connect client to server
         new connect().execute();
 
-        //Button that opens outlet page
         Button gotoOutletPage = (Button) findViewById(R.id.btnOutletspage);
         gotoOutletPage.setOnClickListener(new View.OnClickListener() {
             /** Opens the outlet page when the button is clicked
@@ -51,7 +50,6 @@ public class MainMenu extends AppCompatActivity {
             }
             });
 
-        //Button that opens zone page
         Button goToZonePage = (Button) findViewById(R.id.btnZonePage);
         goToZonePage.setOnClickListener(new View.OnClickListener(){
             /**
@@ -62,6 +60,20 @@ public class MainMenu extends AppCompatActivity {
             public void onClick(View v) {
                 //Open zone page
                 Intent intent = new Intent(MainMenu.this, ZonesPage.class);
+                startActivity(intent);
+            }
+        });
+
+        Button goToSchedulePage = (Button) findViewById(R.id.btnSchedulePage);
+        goToSchedulePage.setOnClickListener(new View.OnClickListener(){
+            /**
+             * Opens the schedule page when the button is clicked
+             * @param v The view that is clicked
+             */
+            @Override
+            public void onClick(View v) {
+                //Open schedule page
+                Intent intent = new Intent(MainMenu.this, SchedulesPage.class);
                 startActivity(intent);
             }
         });
