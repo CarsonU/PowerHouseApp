@@ -17,9 +17,9 @@ public class NewOutlet extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.popupwindow);
-        Log.v("NewOutlet.java","onCreate called");
+        setContentView(R.layout.newoutletwindow);
 
+        Log.v("NewOutlet.java","onCreate called");
 
         //Popup window size is 75% as big as main window
         DisplayMetrics dm = new DisplayMetrics();

@@ -29,8 +29,8 @@ import java.util.Iterator;
 public class OutletsPage extends AppCompatActivity {
     static PrintStream p;
     static BufferedReader reader;
-    private ArrayList<Outlet> outletList;
-    private RecyclerView recyclerView;
+    private static ArrayList<Outlet> outletList;
+    private RecyclerView outletsRecycler;
     static ConstraintLayout mainLayout;
 
     @Override
@@ -38,6 +38,7 @@ public class OutletsPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.outlet_page);
         mainLayout = findViewById(R.id.mainLayout);
+
         Log.v("OutletsPage.java","onCreate called");
 
         //Get printstream
@@ -45,9 +46,9 @@ public class OutletsPage extends AppCompatActivity {
         //Get reader
         reader = MainMenu.getReader();
 
-        recyclerView = findViewById(R.id.outlets);
+        //Update list of outlets and recyclerview
+        outletsRecycler = findViewById(R.id.outlets);
         outletList = new ArrayList<>();
-        //Update outlets and recyclerview
         new syncOutlets().execute();
 
         //Floating action button to show new outlet pop up window
@@ -59,15 +60,13 @@ public class OutletsPage extends AppCompatActivity {
                 startActivityForResult(new Intent(OutletsPage.this, NewOutlet.class), 1);
             }
         });
-
     }
-
     //Gets outlet information from popup window
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Result code for newoutlet page = 1
-        if (requestCode == 1){
+        //Result code for newoutlet page = 100
+        if (resultCode == 100){
             //Add outlet to client list
             Outlet outlet = (Outlet) data.getSerializableExtra("outlet");
             //Add outlet server side and update recyclerview
@@ -79,12 +78,12 @@ public class OutletsPage extends AppCompatActivity {
     private void setRecyclerAdapter() {
         Log.v("outlets list", String.valueOf(outletList));
 
-        recyclerAdapter adapter = new recyclerAdapter(outletList);
+        OutletListAdapter adapter = new OutletListAdapter(outletList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
+        outletsRecycler.setLayoutManager(layoutManager);
+        outletsRecycler.addItemDecoration(new DividerItemDecoration(outletsRecycler.getContext(), DividerItemDecoration.VERTICAL));
+        outletsRecycler.setItemAnimator(new DefaultItemAnimator());
+        outletsRecycler.setAdapter(adapter);
     }
 
     //Shows a popup snackbar for messages from the server
@@ -92,8 +91,11 @@ public class OutletsPage extends AppCompatActivity {
         Snackbar.make(mainLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
+    public static ArrayList<Outlet> getOutletList() {
+        return outletList;
+    }
 
-    //Creates and outlet server side, and then updates the client
+    //Creates an outlet server side, and then updates the client
     class addOutlet extends AsyncTask<Outlet, Void, Void> {
         @Override
         protected Void doInBackground(Outlet... params) {
@@ -107,7 +109,6 @@ public class OutletsPage extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -165,6 +166,7 @@ public class OutletsPage extends AppCompatActivity {
             String command = "outlets on " + params[0].getName();
             p.println(command);
 
+            //Display message from server
             try {
                 showSnackbar(reader.readLine());
             } catch (IOException e) {
@@ -182,6 +184,8 @@ public class OutletsPage extends AppCompatActivity {
             Log.v("Task","Button off task called for " + params[0].getName());
             String command = "outlets off " + params[0].getName();
             p.println(command);
+
+            //Display message from server
             try {
                 showSnackbar(reader.readLine());
             } catch (IOException e) {
@@ -232,12 +236,12 @@ public class OutletsPage extends AppCompatActivity {
             String command = "outlets toggle " + params[0].getName();
             p.println(command);
 
+            //Display message from server
             try {
-                reader.readLine();
+                showSnackbar(reader.readLine());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
     }

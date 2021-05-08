@@ -14,16 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyViewHolder> {
-
+public class OutletListAdapter extends RecyclerView.Adapter<OutletListAdapter.MyViewHolder> {
     private ArrayList<Outlet> outletList;
 
-    public recyclerAdapter(ArrayList<Outlet> outletList){
+    public OutletListAdapter(ArrayList<Outlet> outletList){
         this.outletList = outletList;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        public String name;
+        //public String name;
         public int position;
         private TextView outletTxt;
         private final Context context;
@@ -72,17 +71,17 @@ public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.MyView
 
     @NonNull
     @Override
-    public recyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OutletListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.outletlist, parent,false);
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull recyclerAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull OutletListAdapter.MyViewHolder holder, int position) {
         //Store and set outlet name
         Outlet outlet = outletList.get(position);
         holder.outletTxt.setText(outlet.getName());
-        holder.name = outlet.getName();
+        //holder.name = outlet.getName();
         holder.position = position;
 
     }

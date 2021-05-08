@@ -14,14 +14,14 @@
         <activity android:name=".MainMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".NewOutlet"></activity>
+        <activity android:name=".NewZone"></activity>
         <activity android:name=".OutletsPage"></activity>
         <activity android:name=".OutletUsage"></activity>
-        <activity android:name=".Zones"></activity>
+        <activity android:name=".ZonesPage"></activity>
     </application>
 
 </manifest>
