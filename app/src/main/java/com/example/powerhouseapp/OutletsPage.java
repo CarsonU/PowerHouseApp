@@ -26,6 +26,10 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
+/**
+ * Outlets page activity
+ */
 public class OutletsPage extends AppCompatActivity {
     static PrintStream p;
     static BufferedReader reader;
@@ -33,6 +37,10 @@ public class OutletsPage extends AppCompatActivity {
     private RecyclerView outletsRecycler;
     static ConstraintLayout mainLayout;
 
+    /**
+     * Called when the outlets page activity is started
+     * @param savedInstanceState Contains the most recent data if the activity is being re-initialized
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +59,12 @@ public class OutletsPage extends AppCompatActivity {
         outletList = new ArrayList<>();
         new syncOutlets().execute();
 
-        //Floating action button to show new outlet pop up window
         FloatingActionButton newOutlet = (FloatingActionButton) findViewById(R.id.newOutlet);
         newOutlet.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Opens the popup window to add the new outlet when the floating action button is clicked
+             * @param v The view that was clicked
+             */
             @Override
             public void onClick(View v) {
                 //Open popup window to enter outlet information
@@ -61,7 +72,13 @@ public class OutletsPage extends AppCompatActivity {
             }
         });
     }
-    //Gets outlet information from popup window
+
+    /**
+     * Waits for popup window to finish then adds the outlet
+     * @param requestCode Used to identify this activity
+     * @param resultCode Used to identify the new outlet activity
+     * @param data The outlet data from the popup window
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -74,7 +91,9 @@ public class OutletsPage extends AppCompatActivity {
         }
     }
 
-    //Update recyclerview
+    /**
+     * Updates the recyclerview
+     */
     private void setRecyclerAdapter() {
         Log.v("outlets list", String.valueOf(outletList));
 
@@ -86,17 +105,31 @@ public class OutletsPage extends AppCompatActivity {
         outletsRecycler.setAdapter(adapter);
     }
 
-    //Shows a popup snackbar for messages from the server
+    /**
+     * Shows a popup snackbar with a message
+     * @param message This message to be displayed
+     */
     private static void showSnackbar(String message){
         Snackbar.make(mainLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
+    /**
+     * Returns the current list of outlets
+     * @return the current list of outlets
+     */
     public static ArrayList<Outlet> getOutletList() {
         return outletList;
     }
 
-    //Creates an outlet server side, and then updates the client
+
+    /**
+     * Adds an outlet server side, and then updates the client
+     */
     class addOutlet extends AsyncTask<Outlet, Void, Void> {
+        /**
+         * Adds the given outlet server side
+         * @param params The outlet to be added server side
+         */
         @Override
         protected Void doInBackground(Outlet... params) {
             String outletName = params[0].getName();
@@ -112,16 +145,26 @@ public class OutletsPage extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * Updates client side outlets with the server, after the outlet
+         * is added
+         */
         @Override
-        //After outlet is added server side, update client
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             new syncOutlets().execute();
         }
     }
 
-    //Syncs client outlets with server outlets and updates recyclerview
+
+    /**
+     * Syncs the client outlets with the server and then updates the
+     * recyclerview
+     */
     class syncOutlets extends AsyncTask<Void,Void,Void> {
+        /**
+         * Syncs client outlets with the server
+         */
         @Override
         protected Void doInBackground(Void... voids) {
             Log.v("Update Outlets","Task Called");
@@ -150,7 +193,9 @@ public class OutletsPage extends AppCompatActivity {
             return null;
         }
 
-        //After the client outlets are synced with server outlets, update the recyclerview
+        /**
+         * Updates the recyclerview after the outlets are synced
+         */
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -158,8 +203,14 @@ public class OutletsPage extends AppCompatActivity {
         }
     }
 
-    //Receives outlet and turns it on
+    /**
+     * Turns the given outlet on
+     */
     public static class outletOn extends AsyncTask<Outlet,Void,Void>{
+        /**
+         * Turn on the outlet
+         * @param params Outlet to turn on
+         */
         @Override
         protected Void doInBackground(Outlet... params) {
             Log.v("Task","Button on task called for " + params[0].getName());
@@ -177,8 +228,14 @@ public class OutletsPage extends AppCompatActivity {
         }
     }
 
-    //Receives outlet and turns it off
+    /**
+     * Turns the given outlet off
+     */
     public static class outletOff extends AsyncTask<Outlet,Void,Void>{
+        /**
+         * Turn off the outlet
+         * @param params Outlet to turn off
+         */
         @Override
         protected Void doInBackground(Outlet... params) {
             Log.v("Task","Button off task called for " + params[0].getName());
@@ -195,7 +252,17 @@ public class OutletsPage extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates and returns the outlet usage for the given outlet
+     */
     public static class outletUsage extends AsyncTask<Outlet, Void, ArrayList<String>> {
+        /**
+         * Receives and outlet and returns the power usage of the outlet for today,
+         * daily average and total usage.
+         * @param params Find the usage of this outlet
+         * @return The power usage of the outlet. Returns a string
+         * arraylist {Today, Daily Average, Total}
+         */
         @Override
         protected ArrayList<String> doInBackground(Outlet... params) {
             //Stores usage values in kWh. {Today, Daily Average, Total}
@@ -222,13 +289,19 @@ public class OutletsPage extends AppCompatActivity {
             }
         }
 
+        /**
+         * Returns the arraylist containing the outlet's power usage, after it is finished
+         * calculating
+         * @param s The arraylist {Today, Daily Average, Total} of the outlets power
+         *          usage information
+         */
         @Override
-        //Returns arraylist after it calculates usage
         protected void onPostExecute(ArrayList<String> s) {
             super.onPostExecute(s);
         }
     }
 
+    //NOT USED
     //Receives outlet and toggles it
     class toggle extends AsyncTask<Outlet,Void,Void>{
         @Override

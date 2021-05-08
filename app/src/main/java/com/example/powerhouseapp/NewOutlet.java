@@ -13,7 +13,14 @@ import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 
+/**
+ * New Outlet Pop Up Window Activity
+ */
 public class NewOutlet extends Activity {
+    /**
+     * Called when the new outlet window activity is started
+     * @param savedInstanceState Contains the most recent data if the activity is being re-initialized
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,9 +40,16 @@ public class NewOutlet extends Activity {
 
         //When the button is clicked, get data and send it to outlets page
         createOutlet.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Gets the data from the text fields and sends the data to previous activity when the
+             * create outlet button is clicked
+             * @param v The view that is being clicked
+             */
             @Override
             public void onClick(View v) {
+                //Create outlet
                 Outlet outlet = new Outlet(editName.getText().toString(),editIP.getText().toString());
+                //Send outlet to preivous activity
                 Intent intent = new Intent();
                 intent.putExtra("outlet", (Serializable) outlet);
                 setResult(100, intent);

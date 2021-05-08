@@ -11,12 +11,19 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+/**
+ * Outlet usage activity
+ */
 public class OutletUsage extends AppCompatActivity {
+    /**
+     * Called when the outlet usage activity is started
+     * @param savedInstanceState Contains the most recent data if the activity is being re-initialized
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.outlet_usage);
-        Log.v("OutletUsage.java","onCreate called");
 
+        Log.v("OutletUsage.java","onCreate called");
 
         //Receive usage data from recycleradapter
         Intent intent = getIntent();

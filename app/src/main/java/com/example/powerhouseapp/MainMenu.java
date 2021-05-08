@@ -15,16 +15,20 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
+/**
+ * Main Menu Activity
+ */
 public class MainMenu extends AppCompatActivity {
-    String carsonPiIP = "10.0.0.28";
-    String benPiIP = "";
-    String tylerPiIP = "";
-    String serverIP = carsonPiIP;
+    String serverIP = "10.0.0.28";
 
     //Used for sending commands to the server
     static PrintStream p;
     static BufferedReader reader;
 
+    /**
+     * Called when the main menu page activity is started
+     * @param savedInstanceState Contains the most recent data if the activity is being re-initialized
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_main);
@@ -36,6 +40,9 @@ public class MainMenu extends AppCompatActivity {
         //Button that opens outlet page
         Button gotoOutletPage = (Button) findViewById(R.id.btnOutletspage);
         gotoOutletPage.setOnClickListener(new View.OnClickListener() {
+            /** Opens the outlet page when the button is clicked
+             * @param v The view that is clicked
+             */
             @Override
             public void onClick(View v) {
                 //Open outlet page
@@ -47,6 +54,10 @@ public class MainMenu extends AppCompatActivity {
         //Button that opens zone page
         Button goToZonePage = (Button) findViewById(R.id.btnZonePage);
         goToZonePage.setOnClickListener(new View.OnClickListener(){
+            /**
+             * Opens the zone page when the button is clicked
+             * @param v The view that is clicked
+             */
             @Override
             public void onClick(View v) {
                 //Open zone page
@@ -56,8 +67,13 @@ public class MainMenu extends AppCompatActivity {
         });
     }
 
-    //Connects client to server
+    /**
+     * Connects the client to the server
+     */
     class connect extends AsyncTask<Void,Void,Void> {
+        /**
+         * Connects client to the server
+         */
         @Override
         protected Void doInBackground(Void... voids) {
             try {
@@ -72,11 +88,20 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    //Printstream getter
+
+    /**
+     * Returns the printstream, used for sending commands to the server
+     * @return The current prinstream
+     */
     public static PrintStream getP() {
         return p;
     }
-    //Reader getter
+
+
+    /**
+     * Returns the bufferedreader, used for reading message from the server
+     * @return The current bufferedreader
+     */
     public static BufferedReader getReader() {
         return reader;
     }

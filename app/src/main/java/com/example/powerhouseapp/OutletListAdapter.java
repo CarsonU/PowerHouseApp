@@ -14,9 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Adapter for the recyclerview displaying the list of outlets in the outlets page activity
+ */
 public class OutletListAdapter extends RecyclerView.Adapter<OutletListAdapter.MyViewHolder> {
     private ArrayList<Outlet> outletList;
 
+    /**
+     * Adapter constructor
+     * @param outletList The list of outlets to display
+     */
     public OutletListAdapter(ArrayList<Outlet> outletList){
         this.outletList = outletList;
     }
@@ -27,11 +34,13 @@ public class OutletListAdapter extends RecyclerView.Adapter<OutletListAdapter.My
         private TextView outletTxt;
         private final Context context;
 
+
         public MyViewHolder(final View view){
             super(view);
             outletTxt = view.findViewById(R.id.textOutlet);
             context = view.getContext();
 
+            //When the outlet text is clicked, not the buttons
             itemView.setOnClickListener((v) -> {
                 Log.v("View","Attempt to open usage");
                 Intent intent = new Intent(context, OutletUsage.class);
@@ -51,16 +60,22 @@ public class OutletListAdapter extends RecyclerView.Adapter<OutletListAdapter.My
                 context.startActivity(intent);
             });
 
-            //Turn the outlet on button
             itemView.findViewById(R.id.btnOn).setOnClickListener(new View.OnClickListener(){
+                /**
+                 * Turns the outlet on when the on button is clicked
+                 * @param v The view being clicked
+                 */
                 @Override
                 public void onClick(View v) {
                     new OutletsPage.outletOn().execute(outletList.get(position));
                 }
             });
 
-            //Turn the outlet off button
             itemView.findViewById(R.id.btnOff).setOnClickListener(new View.OnClickListener(){
+                /**
+                 * Turns the outlet off when the off button is clicked
+                 * @param v The view being clicked
+                 */
                 @Override
                 public void onClick(View v) {
                    new OutletsPage.outletOff().execute(outletList.get(position));
@@ -69,6 +84,12 @@ public class OutletListAdapter extends RecyclerView.Adapter<OutletListAdapter.My
         }
     }
 
+    /**
+     * Called when the recyclerview needs a new ViewHolder
+     * @param parent the recyclerview
+     * @param viewType the type of view
+     * @return the new view holder
+     */
     @NonNull
     @Override
     public OutletListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -76,6 +97,11 @@ public class OutletListAdapter extends RecyclerView.Adapter<OutletListAdapter.My
         return new MyViewHolder(itemView);
     }
 
+    /**
+     * Called by the recyclerview to display data at a specific position
+     * @param holder The specific row of the recyclerview being updated
+     * @param position The position of the row within the reyclerview
+     */
     @Override
     public void onBindViewHolder(@NonNull OutletListAdapter.MyViewHolder holder, int position) {
         //Store and set outlet name
@@ -86,6 +112,10 @@ public class OutletListAdapter extends RecyclerView.Adapter<OutletListAdapter.My
 
     }
 
+    /**
+     * Returns the amount of outlets, or the amount of rows in the recyclerview
+     * @return the amount of outlets
+     */
     @Override
     public int getItemCount() {
         return outletList.size();

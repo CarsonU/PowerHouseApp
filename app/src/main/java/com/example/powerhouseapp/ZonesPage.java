@@ -24,12 +24,19 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+/**
+ * Zones page activity
+ */
 public class ZonesPage extends AppCompatActivity {
     static PrintStream p;
     static BufferedReader reader;
     private ArrayList<Zone> zonelist;
     private RecyclerView zonesRecycler;
 
+    /**
+     * Called when the zones page activity is started
+     * @param savedInstanceState Contains the most recent data if the activity is being re-initialized
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +54,12 @@ public class ZonesPage extends AppCompatActivity {
         zonelist = new ArrayList<>();
         new syncZones().execute();
 
-        //Floating action button to add new zone
         FloatingActionButton newZone = (FloatingActionButton) findViewById(R.id.fabNewZone);
         newZone.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Opens the popup window to add the new zone when the floating action button is clicked
+             * @param v the view that was clicked
+             */
             @Override
             public void onClick(View v) {
                 //Open popup window to enter zone information
@@ -58,6 +68,12 @@ public class ZonesPage extends AppCompatActivity {
         });
     }
 
+    /**
+     * Waits for the popup window to finish then adds the zone
+     * @param requestCode Used to identify this activity
+     * @param resultCode Used to identify the new zone activty
+     * @param data The zone data from the popup window
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -68,7 +84,9 @@ public class ZonesPage extends AppCompatActivity {
         }
     }
 
-    //Creates and updates zone list recycervliew
+    /**
+     * Updates the recyclerview
+     */
     private void setZoneAdapter() {
         ZoneListAdapter adapter = new ZoneListAdapter(zonelist);
         Log.v("Adapter zones", String.valueOf(zonelist));
@@ -79,8 +97,14 @@ public class ZonesPage extends AppCompatActivity {
         zonesRecycler.setAdapter(adapter);
     }
 
-    //Creates a zone server side, and then updates the client
+    /**
+     * Adds a zone server side, then updates the client
+     */
     class addZone extends AsyncTask<Zone, Void, Void> {
+        /**
+         * Adds the given zone server side
+         * @param params The zone to be added server side
+         */
         @Override
         protected Void doInBackground(Zone... params) {
             //Create the zone server side
@@ -107,16 +131,25 @@ public class ZonesPage extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * Updates client side zones with the server, after the zone
+         * is added
+         */
         @Override
-        //After zone is added server side, update client
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             new syncZones().execute();
         }
     }
 
-    //Syncs zones on the client with the server
+    /**
+     * Syncs the client zones with the server and then updates the
+     * recyclerview
+     */
     class syncZones extends AsyncTask<Void, Void, Void> {
+        /**
+         * Sync client zones with server
+         */
         @Override
         protected Void doInBackground(Void... voids) {
             Log.v("Sync Zones", "Task Called");
@@ -156,16 +189,24 @@ public class ZonesPage extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * Updates the recyclerview after the zones are synced
+         */
         @Override
-        //Update recyclerview after zones are synced
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             setZoneAdapter();
         }
     }
 
-    //Receives zone and turns it on
+    /**
+     * Turns the given zone on
+     */
     public static class zoneOn extends AsyncTask<Zone,Void,Void>{
+        /**
+         * Turn on the zone
+         * @param params Zone to turn on
+         */
         @Override
         protected Void doInBackground(Zone... params) {
             Log.v("Task","Button on task called for " + params[0].getName());
@@ -181,8 +222,14 @@ public class ZonesPage extends AppCompatActivity {
         }
     }
 
-    //Receives zone and turns it off
+    /**
+     * Turn the given zone off
+     */
     public static class zoneOff extends AsyncTask<Zone,Void,Void>{
+        /**
+         * Turn off the zone
+         * @param params Zone to turn off
+         */
         @Override
         protected Void doInBackground(Zone... params) {
             Log.v("Task","Button on task called for " + params[0].getName());
